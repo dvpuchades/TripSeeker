@@ -27,6 +27,26 @@ def check_trip(trip, list_of_trips) -> bool:
             return False
     return True
 
+def equals(combination_a, combination_b):
+    if len(combination_a) != len(combination_b):
+        return False
+    for trip_a in combination_a:
+        if trip_a not in combination_b:
+            return False
+    return True
+
+def remove_duplicates(list_of_combinations):
+    new_list = []
+    for combination in list_of_combinations:
+        is_in_list = False
+        for other_combination in new_list:
+            if equals(combination, other_combination):
+                is_in_list = True
+                break
+        if not is_in_list:
+            new_list.append(combination)
+    return new_list
+
 class TripChecker:
     def __init__(self, trips):
         self.origins = {trip.outbound.origin for trip in trips}
@@ -43,6 +63,7 @@ class TripChecker:
                     # combination works as a reference
                     # so it will update self.all_possible_combinations
                     combination.append(trip)
+        self.all_possible_combinations = remove_duplicates(self.all_possible_combinations)
 
     # remove combinations that don't have all the origins
     def _remove_invalid_combinations(self):
